@@ -1,0 +1,24 @@
+,Type,Bonnummer,Datum,PersoonID,Naam,Bedrag
+0,PB,0,1-1-2019,1.0,Lars Tijssen,2.23
+1,Stafhap,1,15-5-2019,5.0,Annie,15.04
+2,Stafhap,1,15-5-2019,4.0,Elly,15.04
+3,Stafhap,1,15-5-2019,3.0,Fabian,15.04
+4,Stafhap,1,15-5-2019,0.0,Jasper Daleman,15.04
+5,Stafhap,1,15-5-2019,1.0,Lars Tijssen,15.04
+6,Stafhap,1,15-5-2019,2.0,Leonie,15.04
+7,Stafhap,2,5-8-2019,5.0,Annie,0.52
+8,Stafhap,2,5-8-2019,4.0,Elly,0.52
+9,Stafhap,2,5-8-2019,3.0,Fabian,0.52
+10,Stafhap,2,5-8-2019,0.0,Jasper Daleman,0.52
+11,Stafhap,2,5-8-2019,1.0,Lars Tijssen,0.52
+12,Stafhap,2,5-8-2019,2.0,Leonie,0.52
+13,PB,3,7-2-2019,3.0,Fabian,11.11
+14,PB,3,7-2-2019,2.0,Leonie,11.11
+15,PB,3,7-2-2019,5.0,Annie,11.11
+16,PB,3,7-2-2019,4.0,Elly,1.5
+17,PB,4,6-4-2019,0.0,Jasper Daleman,1.25
+18,PB,4,6-4-2019,1.0,Lars Tijssen,1.25
+19,PB,0,1-1-2019,5.0,Annie,3.0
+20,PB,0,1-1-2019,4.0,Elly,2.55
+21,PB,3,7-2-2019,10.0,Jan,11.11
+22,PB,3,7-2-2019,14.0,Emma,2.3
