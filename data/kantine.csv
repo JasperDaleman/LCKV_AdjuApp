@@ -1,3 +1,7 @@
 ,Productgroep,Productomschrijving,Productcode,Prijs,Inhoud,Suiker,Calorieen
 0,Dranken,Fanta,98123,1.5,0.5,2.0,150.0
 1,Dranken,Cola,225515,1.5,0.5,20.0,135.0
+<<<<<<< HEAD
+2,Chips,Paprika Chips,231232,0.7,0.35,0.2,80.0
+=======
+>>>>>>> bb5d2b6e626db693cc536b5af0688c9058c0e3ae
