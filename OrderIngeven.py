@@ -1,13 +1,10 @@
-import PyQt5
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLineEdit, QWidget, QComboBox, QGridLayout, QPushButton, QLabel, QMessageBox, QTableWidget
-
 import sys
-import os
 import pandas as pd
 import numpy as np
-
 from datetime import datetime
+import StandaardFuncties
 
 class OrderIngeven(QWidget):
     def __init__(self, master):
@@ -166,15 +163,8 @@ class OrderIngeven(QWidget):
                 self.fill_table()
         else:
             print('Geen rij geselecteerd')
-            self.msgBox = QMessageBox()
-            self.msgBox.setIcon(QMessageBox.Warning)
-            self.msgBox.setStandardButtons(QMessageBox.Ok)
-            self.msgBox.setText('Geen rij geselecteerd! ')
-            self.msgBox.setWindowTitle('Regel verwijderen')
-            self.msgBox.show()
-            self.msgBox.exec_()
+            StandaardFuncties.warning(self, "Geen rij geselecteerd!", "Regel verwijderen")
  
-            
     def fltr(self):
         self.dncombo.clear()
         #sel = self.master.master.deelnemers[self.master.master.deelnemers.Tent == self.tentcombo.currentText()]
@@ -184,29 +174,28 @@ class OrderIngeven(QWidget):
             self.dncombo.addItem(n)
 
     def barcode_scanned(self):
-        name = self.master.master.personen.Naam.loc[self.master.master.personen.Barcode == self.dn.text()]
-        tent = self.master.master.personen.Tent.loc[self.master.master.personen.Barcode == self.dn.text()]
-        self.persID = self.master.master.personen.index[self.master.master.personen.Barcode == self.dn.text()][0]
+        if self.dn.text() not in self.master.master.personen.Barcode:
+            StandaardFuncties.warning(self, "Barcode niet gevonden", "Helaas")
+        else:
+            name = self.master.master.personen.Naam.loc[self.master.master.personen.Barcode == self.dn.text()]
+            tent = self.master.master.personen.Tent.loc[self.master.master.personen.Barcode == self.dn.text()]
+            self.persID = self.master.master.personen.index[self.master.master.personen.Barcode == self.dn.text()][0]
 
-        print(name, tent)
+            print(name, tent)
+            
+            if len(name) > 0:
+                self.tentcombo.setCurrentText(self.master.master.personen.at[tent.index[0], 'Tent'])
+                self.dncombo.setCurrentText(self.master.master.personen.at[name.index[0], 'Naam'])
+
+            #self.dn.clear()
+            self.productcode.setFocus()
         
-        if len(name) > 0:
-            self.tentcombo.setCurrentText(self.master.master.personen.at[tent.index[0], 'Tent'])
-            self.dncombo.setCurrentText(self.master.master.personen.at[name.index[0], 'Naam'])
-
-        #self.dn.clear()
-        self.productcode.setFocus()
-    
-        # Inleg opzoeken
-        try:
-            self.inleg = self.master.master.inleg.loc[self.master.master.inleg[self.master.master.inleg.PersoonID == self.persID].index[0], 'InlegHuidig']
-            self.inleg_label.setText('Inleg: {}'.format(self.inleg))
-        except IndexError:
-            msg = QMessageBox()
-            msg.setText('Geen inleg beschikbaar')
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.setWindowTitle('Foutmelding')
-            msg.exec_()
+            # Inleg opzoeken
+            try:
+                self.inleg = self.master.master.inleg.loc[self.master.master.inleg[self.master.master.inleg.PersoonID == self.persID].index[0], 'InlegHuidig']
+                self.inleg_label.setText('Inleg: {}'.format(self.inleg))
+            except IndexError:
+                StandaardFuncties.warning(self, "Geen inleg beschikbaar", "Foutmelding")
 
     def confirm_order(self):
         self.dncombo.clear()
@@ -227,9 +216,9 @@ class OrderIngeven(QWidget):
 
     def confirm_line(self):
         on = self.ordernummer
-        bc = self.dn.text()
+        persid = self.persID
         prodc = self.productcode.text()
-        if prodc is not '':
+        if prodc != '':
             try: 
                 prod = self.master.master.kantine.Productomschrijving.loc[self.master.master.kantine.Productcode == prodc].values[0]
                 
@@ -239,7 +228,7 @@ class OrderIngeven(QWidget):
                 am = self.amount.text()
                 bedr = self.master.master.kantine.Prijs.loc[self.master.master.kantine.Productcode == prodc].values[0] * int(am)
             
-                s = pd.Series([on, date, bc, prodc, prod, am, bedr], index=self.orderlines.columns)
+                s = pd.Series([on, date, persid, prodc, prod, am, bedr], index=self.orderlines.columns)
                 self.orderlines = self.orderlines.append(s, ignore_index=True, sort=False)
 
                 self.update_label_text(bedr)

@@ -1,17 +1,14 @@
-import PyQt5
 from PyQt5 import QtWidgets
-#TEST
-
+from PyQt5.QtWidgets import QMessageBox
 import sys
 import os
-
-from PyQt5.QtWidgets import QMessageBox
-from MainWindow import MainWindow
-
 import pandas as pd
-
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
+
+from MainWindow import MainWindow
+
+#TODO: config file maken
 
 class App(QtWidgets.QApplication):
     def __init__(self, arg):
@@ -125,11 +122,11 @@ class App(QtWidgets.QApplication):
         QtWidgets.QApplication.quit()
     
     def check_inleg(self):
-        over = self.inleg[~self.inleg.Barcode.isin(self.personen.Barcode)]
+        over = self.inleg[~self.inleg.PersoonID.isin(self.personen.index)]
         self.msgWarn = QtWidgets.QMessageBox()
         if len(over) > 0:
             for i,row in over.iterrows():
-                self.msgWarn.setText('{} is niet toegewezen aan een deelnemer.\nVerwijderen?'.format(row.Barcode))
+                self.msgWarn.setText(f'{row.PersoonID} is niet toegewezen aan een deelnemer.\nVerwijderen?')
                 self.msgWarn.setWindowTitle('Niet toegewezen barcode')
                 self.msgWarn.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
                 self.msgWarn.show()
@@ -138,14 +135,14 @@ class App(QtWidgets.QApplication):
                 if retval == QtWidgets.QMessageBox.Yes:
                     self.inleg.drop(i, inplace=True)
                     self.msgBox = QtWidgets.QMessageBox()
-                    self.msgBox.setText('{} verwijderd'.format(row.Barcode))
+                    self.msgBox.setText(f'{row.PersoonID} verwijderd')
                     self.msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
                     self.msgBox.show()
                     self.msgBox.exec_()
 
                 else:
                     self.msgBox = QtWidgets.QMessageBox()
-                    self.msgBox.setText('{} niet verwijderd, zoek uit bij wie deze barcode met inleg hoort.'.format(row.Barcode))
+                    self.msgBox.setText(f'{row.PersoonID} niet verwijderd, zoek uit bij wie deze barcode met inleg hoort.')
                     self.msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
                     self.msgBox.show()
                     self.msgBox.exec_()

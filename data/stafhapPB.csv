@@ -1,6 +1,4 @@
 ,Type,Bonnummer,Datum,PersoonID,Naam,Bedrag
-<<<<<<< HEAD
-=======
 0,Stafhap,1,15-5-2019,5.0,Annie,15.04
 1,Stafhap,1,15-5-2019,4.0,Elly,15.04
 2,Stafhap,1,15-5-2019,3.0,Fabian,15.04
@@ -23,4 +21,3 @@
 19,PB,3,7-2-2019,14.0,Emma,2.3
 20,PB,0,1-1-2019,3.0,Fabian,1.12
 21,PB,0,1-1-2019,2.0,Leonie,1.12
->>>>>>> bb5d2b6e626db693cc536b5af0688c9058c0e3ae
