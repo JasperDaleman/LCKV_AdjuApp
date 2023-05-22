@@ -1,18 +1,18 @@
 ,Naam,Geslacht,Functie,Tent,Barcode
-0,Jasper Daleman,Man,Adjudant,Staf,9988776655
-1,Lars Tijssen,Man,Adjudant,Staf,1122334455
-2,Leonie,Vrouw,DS,Staf,234234345
-3,Fabian,Man,Kok,Staf,234234332
-4,Elly,Man,Kok,Staf,234234334
-5,Annie,Man,Kok,Staf,234234335
-6,Kees,Man,Sportknots,Staf,234234337
-7,Mark,Man,Sportknots,Staf,234234338
-8,Sebastiaan Zaalberg,Man,Tentchef,Staf,1234567899
-9,Piet,Man,Tentchef,Staf,234234339
-10,Jan,Man,Tentchef,Staf,234234340
-11,Klaas,Man,Tentchef,Staf,234234341
-12,Marie,Vrouw,Tentchef,Staf,234234342
-13,Margriet,Vrouw,Tentchef,Staf,234234343
-14,Emma,Vrouw,Tentchef,Staf,234234344
-15,Marietje,Man,Deelnemer,Tent 2,234234336
-16,Pietje,Man,Deelnemer,Tent 3,234234333
+0,Tess,Vrouw,Adju,Staf,8
+1,Lars,Man,Adju,Staf,9
+2,Marjoleine,Vrouw,DS,Staf,3
+3,Pels,Man,Hoofdleiding,Staf,1
+4,Trel,Man,Hoofdleiding,Staf,2
+5,Robert,Man,Joker,Staf,10
+6,David,Man,Kok,Staf,6
+7,Koen,Man,Kok,Staf,7
+8,Folkert,Man,Sportknots,Staf,4
+9,Max,Man,Sportknots,Staf,5
+10,Nina,Vrouw,Tentchef,Staf,11
+11,Mickey,Vrouw,Tentchef,Staf,12
+12,Floor,Vrouw,Tentchef,Staf,13
+13,Jurre,Man,Tentchef,Staf,14
+14,Matthijs,Man,Tentchef,Staf,15
+15,Marietje,Vrouw,Deelnemer,Tent 2,16
+16,Pietje,Man,Deelnemer,Tent 3,17

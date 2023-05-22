@@ -1,4 +1,3 @@
-import PyQt5
 from PyQt5 import QtWidgets
 
 
@@ -9,15 +8,15 @@ class KantineHome(QtWidgets.QWidget):
 
         self.layout = QtWidgets.QGridLayout()
 
-        kt = QtWidgets.QPushButton(self, text='Keer terug')
+        kt = QtWidgets.QPushButton(self, text="Keer terug")
         kt.pressed.connect(self.ret)
         kt.setAutoDefault(True)
 
-        bi = QtWidgets.QPushButton(self, text='Order ingeven')
+        bi = QtWidgets.QPushButton(self, text="Order ingeven")
         bi.pressed.connect(self.bon_ingeven)
         bi.setAutoDefault(True)
 
-        ab = QtWidgets.QPushButton(self, text='Artikelbeheer')
+        ab = QtWidgets.QPushButton(self, text="Artikelbeheer")
         ab.pressed.connect(self.artikel_beheer)
         ab.setAutoDefault(True)
 
@@ -27,12 +26,11 @@ class KantineHome(QtWidgets.QWidget):
 
         self.setLayout(self.layout)
 
-
     def ret(self):
-        self.master.change_screens('HomeScreen')
+        self.master.change_screens("HomeScreen")
 
     def bon_ingeven(self):
-        self.master.change_screens('OrderIngeven')
+        self.master.change_screens("OrderIngeven")
 
     def artikel_beheer(self):
-        self.master.change_screens('ArtikelBeheer')
+        self.master.change_screens("ArtikelBeheer")

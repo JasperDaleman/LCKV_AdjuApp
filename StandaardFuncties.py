@@ -1,5 +1,5 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLineEdit, QWidget, QComboBox, QGridLayout, QPushButton, QLabel, QMessageBox
+from PyQt5.QtWidgets import QMessageBox
+
 
 def warning(cur_class, text, window_title):
     cur_class.msgBox = QMessageBox()

@@ -1,4 +1,3 @@
-import PyQt5
 from PyQt5 import QtWidgets
 
 
@@ -9,23 +8,23 @@ class KampHome(QtWidgets.QWidget):
 
         self.layout = QtWidgets.QGridLayout()
 
-        kt = QtWidgets.QPushButton(self, text='Keer terug')
+        kt = QtWidgets.QPushButton(self, text="Keer terug")
         kt.setAutoDefault(True)
         kt.clicked.connect(self.ret)
 
-        bi = QtWidgets.QPushButton(self, text='Bon Ingeven')
+        bi = QtWidgets.QPushButton(self, text="Bon Ingeven")
         bi.setAutoDefault(True)
         bi.clicked.connect(self.bon_invoeren)
 
-        bw = QtWidgets.QPushButton(self, text='Bon Wijzigen')
+        bw = QtWidgets.QPushButton(self, text="Bon Wijzigen")
         bw.setAutoDefault(True)
         bw.clicked.connect(self.bon_wijzigen)
 
-        sp = QtWidgets.QPushButton(self, text='Stafhap && PB\'s')
+        sp = QtWidgets.QPushButton(self, text="Stafhap && PB's")
         sp.setAutoDefault(True)
         sp.clicked.connect(self.stafhap_pb)
 
-        inzienPersonen = QtWidgets.QPushButton(self, text='Inzien/Wijzigen Personen')
+        inzienPersonen = QtWidgets.QPushButton(self, text="Inzien/Wijzigen Personen")
         inzienPersonen.clicked.connect(self.pers)
 
         self.layout.addWidget(bi, 2, 0)
@@ -37,16 +36,16 @@ class KampHome(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
     def ret(self):
-        self.master.change_screens('HomeScreen')
+        self.master.change_screens("HomeScreen")
 
     def bon_invoeren(self):
-        self.master.change_screens('BonInvoeren')
+        self.master.change_screens("BonInvoeren")
 
     def bon_wijzigen(self):
-        self.master.change_screens('BonWijzigen')
+        self.master.change_screens("BonWijzigen")
 
     def pers(self):
-        self.master.change_screens('PersonenWijzigen')
+        self.master.change_screens("PersonenWijzigen")
 
     def stafhap_pb(self):
-        self.master.change_screens('StafhapEnPB')
+        self.master.change_screens("StafhapEnPB")

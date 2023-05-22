@@ -1,15 +1,8 @@
-import PyQt5
 from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QLineEdit, QWidget, QComboBox, QGridLayout, QPushButton, QLabel, QMessageBox, QRadioButton, QButtonGroup, QTableWidget
-from PyQt5 import QtGui
-from PyQt5 import QtCore
-# from PyQt5.QtGui import QPainter
-# from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QLineEdit, QWidget, QGridLayout, QPushButton, QLabel, QRadioButton, QButtonGroup, QTableWidget
 
 from datetime import datetime
 
-import sys
-import os
 import pandas as pd
 import numpy as np
 
@@ -72,14 +65,7 @@ class StafhapEnPBInzien(QWidget): #TODO: misschien child van StafhapEnPB maken
 
         self.stafleden = self.master.master.personen.sort_values('Naam').loc[self.master.master.personen['Tent'] == 'Staf', 'Naam']
 
-        # self.master.master.stafhapPB = self.master.master.stafhapPB.sort_values('Bonnummer','Type','Datum')
-        self.stafhapPB_pivot = pd.pivot_table(self.master.master.stafhapPB, 'Bedrag', ['Bonnummer','Type','Datum'], columns= ['Naam'], aggfunc=np.sum)#, margins=True, margins_name = 'Totaal')
-        # print(self.stafhapPB_pivot)
-        # print(self.stafleden)
-        # print(type(self.stafhapPB_pivot))
-        # self.dfStafhapPB = self.master.master.stafhapPB[['Type','Bonnummer','Datum']].drop_duplicates()
-
-        # print(self.master.master.stafhapPB[['Type','Bonnummer','Datum']].drop_duplicates())
+        self.stafhapPB_pivot = pd.pivot_table(self.master.master.stafhapPB, 'Bedrag', ['Bonnummer','Type','Datum'], columns= ['Naam'], aggfunc=np.sum)
 
         self.setup_table()
 
@@ -171,7 +157,7 @@ class StafhapEnPBInzien(QWidget): #TODO: misschien child van StafhapEnPB maken
                         self.master.master.stafhapPB = self.master.master.stafhapPB.append(serie, ignore_index=True, sort=False)
                     
                     print(self.master.master.stafhapPB)
-                    self.master.master.stafhapPB.to_csv("C:\\Users\\Lars\\Documents\\LCKV\\Adju App\\Grafisch\\app_opzet2.3\\data\\sthp.csv")
+                    # self.master.master.stafhapPB.to_csv("C:\\Users\\Lars\\Documents\\LCKV\\Adju App\\Grafisch\\app_opzet2.3\\data\\sthp.csv")
                     # print(self.master.master.stafhapPB.loc[self.master.master.stafhapPB['Bonnummer'] == cur_bonnr])
                     # print(j.index, j)
 
