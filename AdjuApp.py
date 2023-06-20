@@ -9,11 +9,14 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 from MainWindow import MainWindow
 
+# TODO: PB niet evenredig verdelen, maar Lars bijv. 10 euro en Tess 5 euro
+# TODO: streeplijst maken -> bandje scannen, biertje scannen (aantal ergens kunnen wijzigen) -> grote knoppen
+# TODO: dubbele barcodes check maken voor personen
+
 # TODO: ilocs niet obv kolomnummer, maar een filter maken... bijv bij BonWijzigen
 # TODO: config file maken
-# TODO: PB niet evenredig verdelen, maar Lars bijv. 10 euro en Tess 5 euro
-# TODO: order invoeren werkt niet
-# TODO: streeplijst maken -> bandje scannen, biertje scannen (aantal ergens kunnen wijzigen) -> grote knoppen
+# TODO: functies voor views maken: create_table_view, create_form_view
+# TODO: barcode wijzigen van persoon (grote aanpassing --> ook doorvoeren in alle bestanden namelijk...)
 
 
 class App(QtWidgets.QApplication):
@@ -133,13 +136,14 @@ class App(QtWidgets.QApplication):
 
         try:
             self.inleg = pd.read_csv(
-                "{}/data/inleg.csv".format(self.cwd),
-                header=0,
+                f"{self.cwd}/data/inleg.csv",
                 index_col=0,
-                dtype={"Barcode": str, "Inleg": float},
+                dtype={"Barcode": str, "InlegOrigineel": float, "InlegHuidig": float},
             )
         except FileNotFoundError:
-            self.inleg = pd.DataFrame(columns=["Barcode", "Inleg"])
+            self.inleg = pd.DataFrame(
+                columns=["Barcode", "InlegOrigineel", "InlegHuidig"]
+            )
 
         try:
             self.stafhapPB = pd.read_csv(
@@ -178,7 +182,7 @@ class App(QtWidgets.QApplication):
             msgbox.exec_()
 
     def close(self):
-        self.check_inleg()
+        # self.check_inleg()
 
         self.bonnen.to_csv("{}/data/bonnen.csv".format(self.cwd), index="Bonnummer")
         self.kantine.to_csv("{}/data/kantine.csv".format(self.cwd))
@@ -192,40 +196,37 @@ class App(QtWidgets.QApplication):
 
         QtWidgets.QApplication.quit()
 
-    def check_inleg(self):
-        over = self.inleg[~self.inleg.PersoonID.isin(self.personen.index)]
-        self.msgWarn = QtWidgets.QMessageBox()
-        if len(over) > 0:
-            for i, row in over.iterrows():
-                self.msgWarn.setText(
-                    f"{row.PersoonID} is niet toegewezen aan een deelnemer.\nVerwijderen?"
-                )
-                self.msgWarn.setWindowTitle("Niet toegewezen barcode")
-                self.msgWarn.setStandardButtons(
-                    QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
-                )
-                self.msgWarn.show()
-                retval = self.msgWarn.exec_()
+    # def check_inleg(self):
+    #     over = self.inleg[~self.inleg.PersoonID.isin(self.personen.index)]
+    #     self.msgWarn = QtWidgets.QMessageBox()
+    #     if len(over) > 0:
+    #         for i, row in over.iterrows():
+    #             self.msgWarn.setText(
+    #                 f"{row.PersoonID} is niet toegewezen aan een deelnemer.\nVerwijderen?"
+    #             )
+    #             self.msgWarn.setWindowTitle("Niet toegewezen barcode")
+    #             self.msgWarn.setStandardButtons(
+    #                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No
+    #             )
+    #             self.msgWarn.show()
+    #             retval = self.msgWarn.exec_()
 
-                if retval == QtWidgets.QMessageBox.Yes:
-                    self.inleg.drop(i, inplace=True)
-                    self.msgBox = QtWidgets.QMessageBox()
-                    self.msgBox.setText(f"{row.PersoonID} verwijderd")
-                    self.msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                    self.msgBox.show()
-                    self.msgBox.exec_()
+    #             if retval == QtWidgets.QMessageBox.Yes:
+    #                 self.inleg.drop(i, inplace=True)
+    #                 self.msgBox = QtWidgets.QMessageBox()
+    #                 self.msgBox.setText(f"{row.PersoonID} verwijderd")
+    #                 self.msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    #                 self.msgBox.show()
+    #                 self.msgBox.exec_()
 
-                else:
-                    self.msgBox = QtWidgets.QMessageBox()
-                    self.msgBox.setText(
-                        f"{row.PersoonID} niet verwijderd, zoek uit bij wie deze barcode met inleg hoort."
-                    )
-                    self.msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                    self.msgBox.show()
-                    self.msgBox.exec_()
-
-        else:
-            pass
+    #             else:
+    #                 self.msgBox = QtWidgets.QMessageBox()
+    #                 self.msgBox.setText(
+    #                     f"{row.PersoonID} niet verwijderd, zoek uit bij wie deze barcode met inleg hoort."
+    #                 )
+    #                 self.msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    #                 self.msgBox.show()
+    #                 self.msgBox.exec_()
 
 
 if __name__ == "__main__":

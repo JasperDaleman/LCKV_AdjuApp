@@ -97,18 +97,18 @@ class ArtikelAanmaken(QWidget):
         pc = self.prodcode.text()
         pg = self.pgcombo.currentText()
         po = self.prodomsc.text()
-        pr = float(self.prijs.text().replace(",", "."))
-        ih = float(self.inhoud.text().replace(",", "."))
-        sk = float(self.suiker.text().replace(",", "."))
-        cl = float(self.calorieen.text().replace(",", "."))
+        pr = float(self.prijs.text().replace(",", ".")) if self.prijs.text() != "" else ""
+        ih = float(self.inhoud.text().replace(",", ".")) if self.inhoud.text() != "" else ""
+        sk = float(self.suiker.text().replace(",", ".")) if self.suiker.text() != "" else ""
+        cl = float(self.calorieen.text().replace(",", ".")) if self.calorieen.text() != "" else ""
 
         if pc == "" or po == "":
             self.msgWarn.setText("Barcode en artikel omschrijving zijn verplicht.")
             self.msgWarn.setWindowTitle("Aanmaken mislukt")
             self.msgWarn.show()
 
-        elif self.master.master.kantine.Productcode.astype(str).str.contains(pc).any():
-            self.msgWarn.setText("Barcode " + pc + " bestaat al. Aanmaken mislukt.")
+        elif pc in self.master.master.kantine["Productcode"].unique():
+            self.msgWarn.setText("Productcode " + pc + " bestaat al. Aanmaken mislukt.")
             self.msgWarn.setWindowTitle("Aanmaken mislukt")
             self.msgWarn.show()
 

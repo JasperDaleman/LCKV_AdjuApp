@@ -109,12 +109,10 @@ class ArtikelBeheer(QWidget):
         self.msgWarn.setIcon(QMessageBox.Warning)
         self.msgWarn.setStandardButtons(QMessageBox.Ok)
 
-        if self.master.master.kantine.Productcode.str.contains(
+        if (
             self.table.currentItem().text()
-        ).any():
-            curProdcode = self.table.item(
-                self.table.currentRow(), self.table.currentColumn()
-            ).text()
+            in self.master.master.kantine["Productcode"].unique()
+        ):
             self.msgWarn.setText("Productcode bestaat al. Aanpassen mislukt.")
             self.msgWarn.setWindowTitle("Aanmaken mislukt")
             self.msgWarn.show()

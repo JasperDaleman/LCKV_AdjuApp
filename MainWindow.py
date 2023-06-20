@@ -15,6 +15,7 @@ from PersonenWijzigen import PersonenWijzigen
 from PersoonToevoegen import PersoonToevoegen
 from StafhapEnPB import StafhapEnPB
 from InvullenBegroting import InvullenBegroting
+from Inleggen import Inleggen
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -41,6 +42,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "PersoonToevoegen": PersoonToevoegen,
             "StafhapEnPB": StafhapEnPB,
             "InvullenBegroting": InvullenBegroting,
+            "Inleggen": Inleggen,
         }
 
         self.setup_menus()
@@ -66,16 +68,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tw = QtWidgets.QAction("&Tentindeling Wijzigen", self)
         self.tw.triggered.connect(self.change_tents)
 
+        self.ii = QtWidgets.QAction("&Inleg Invoeren/Wijzigen", self)
+        self.ii.triggered.connect(self.inleg_invoeren)
+
         self.begr = QtWidgets.QAction("&Begroting Invoeren", self)
-        self.begr.triggered.connect(self.begrotingInvoeren)
+        self.begr.triggered.connect(self.begroting_invoeren)
 
         self.fm.addAction(self.begr)
         self.fm.addAction(self.adn)
         self.fm.addAction(self.ti)
         self.fm.addAction(self.tw)
+        self.fm.addAction(self.ii)
         self.fm.addAction(self.c)
 
-    def begrotingInvoeren(self):
+    def begroting_invoeren(self):
         self.change_screens("InvullenBegroting")
 
     def enter_dn(self):
@@ -89,8 +95,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def change_tents(self):
         self.wijzig_tent = TentWijzigen(self.master)
         self.wijzig_tent.show()
-        # self.change_screens('TentWijzigen')
 
-    def inleggen_geld(self):
+    def inleg_invoeren(self):
         self.inlg = Inleggen(self.master)
         self.inlg.show()

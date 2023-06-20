@@ -33,13 +33,17 @@ class OrderIngeven(QWidget):
 
         dt = datetime.now()
 
+        # get Dataframes
+        self.personen_df = self.master.master.personen
+        self.inleg_df = self.master.master.inleg
+
         # Deelnemer selectie: Tent
         self.dncombo = QComboBox(self)
-        for dn in self.master.master.personen.Naam:
+        for dn in self.personen_df["Naam"]:
             self.dncombo.addItem(str(dn))
 
         self.tentcombo = QComboBox(self)
-        for t in self.master.master.personen.Tent.unique():
+        for t in self.personen_df["Tent"].unique():
             self.tentcombo.addItem(str(t))
 
         self.tentcombo.currentTextChanged.connect(self.fltr)
@@ -149,7 +153,7 @@ class OrderIngeven(QWidget):
             self.table.setItem(i, 0, QtWidgets.QTableWidgetItem(str(i)))
             self.table.setItem(i, 1, QtWidgets.QTableWidgetItem(str(row.Ordernummer)))
             self.table.setItem(i, 2, QtWidgets.QTableWidgetItem(str(row.DatumTijd)))
-            self.table.setItem(i, 3, QtWidgets.QTableWidgetItem(str(row.PersoonID)))
+            self.table.setItem(i, 3, QtWidgets.QTableWidgetItem(str(row.Barcode)))
             self.table.setItem(i, 4, QtWidgets.QTableWidgetItem(str(row.Productcode)))
             self.table.setItem(i, 5, QtWidgets.QTableWidgetItem(str(row.Product)))
             self.table.setItem(i, 6, QtWidgets.QTableWidgetItem(str(row.Aantal)))
@@ -179,56 +183,58 @@ class OrderIngeven(QWidget):
     def fltr(self):
         self.dncombo.clear()
         # sel = self.master.master.deelnemers[self.master.master.deelnemers.Tent == self.tentcombo.currentText()]
-        sel = self.master.master.personen[
-            self.master.master.personen.Tent == self.tentcombo.currentText()
-        ]
+        sel = self.personen_df[self.personen_df.Tent == self.tentcombo.currentText()]
 
         for n in sel.Naam:
             self.dncombo.addItem(n)
 
     def barcode_scanned(self):
-        if self.dn.text() not in self.master.master.personen.Barcode:
+        cur_barcode = self.dn.text()
+        if cur_barcode not in self.personen_df["Barcode"].unique():
             StandaardFuncties.warning(self, "Barcode niet gevonden", "Helaas")
         else:
-            name = self.master.master.personen.Naam.loc[
-                self.master.master.personen.Barcode == self.dn.text()
-            ]
-            tent = self.master.master.personen.Tent.loc[
-                self.master.master.personen.Barcode == self.dn.text()
-            ]
-            self.persID = self.master.master.personen.index[
-                self.master.master.personen.Barcode == self.dn.text()
-            ][0]
+            name = self.personen_df.Naam.loc[self.personen_df.Barcode == cur_barcode]
+            tent = self.personen_df.Tent.loc[self.personen_df.Barcode == cur_barcode]
+            # self.persID = self.personen_df.index[
+            #     self.personen_df.Barcode == self.dn.text()
+            # ][0]
 
             print(name, tent)
 
             if len(name) > 0:
                 self.tentcombo.setCurrentText(
-                    self.master.master.personen.at[tent.index[0], "Tent"]
+                    self.personen_df.at[tent.index[0], "Tent"]
                 )
-                self.dncombo.setCurrentText(
-                    self.master.master.personen.at[name.index[0], "Naam"]
-                )
+                self.dncombo.setCurrentText(self.personen_df.at[name.index[0], "Naam"])
 
             # self.dn.clear()
             self.productcode.setFocus()
 
             # Inleg opzoeken
-            try:
-                self.inleg = self.master.master.inleg.loc[
-                    self.master.master.inleg[
-                        self.master.master.inleg.PersoonID == self.persID
-                    ].index[0],
+            print(cur_barcode)
+            print(self.inleg_df["Barcode"].unique())
+            print(self.inleg_df)
+            if cur_barcode in self.inleg_df["Barcode"].unique():
+                self.inleg = self.inleg_df.loc[
+                    (self.inleg_df["Barcode"] == cur_barcode),
                     "InlegHuidig",
-                ]
-                self.inleg_label.setText("Inleg: {}".format(self.inleg))
-            except IndexError:
-                StandaardFuncties.warning(self, "Geen inleg beschikbaar", "Foutmelding")
+                ].iloc[0]
+                if self.inleg > 0:
+                    self.inleg_label.setText("Inleg: {}".format(self.inleg))
+                else:
+                    StandaardFuncties.warning(
+                        self, "Geen inleg meer beschikbaar", "Foutmelding"
+                    )
+            else:
+                StandaardFuncties.warning(
+                    self, "Nog geen inleg ingevoerd", "Foutmelding"
+                )
 
     def confirm_order(self):
+        cur_barcode = self.dn.text()
         self.dncombo.clear()
 
-        for n in self.master.master.personen.Naam:
+        for n in self.personen_df.Naam:
             self.dncombo.addItem(n)
 
         self.dn.clear()
@@ -240,15 +246,15 @@ class OrderIngeven(QWidget):
         while self.table.rowCount() > 0:
             self.table.removeRow(0)
         self.inleg_label.setText("Inleg: 0")
-        self.master.master.inleg.loc[
-            self.master.master.inleg["PersoonID"] == self.persID, "InlegHuidig"
+        self.inleg_df.loc[
+            self.inleg_df["Barcode"] == cur_barcode, "InlegHuidig"
         ] = self.inleg
 
         print(self.master.master.orders)
 
     def confirm_line(self):
         on = self.ordernummer
-        persid = self.persID
+        cur_barcode = self.dn.text()
         prodc = self.productcode.text()
         if prodc != "":
             try:
@@ -268,7 +274,7 @@ class OrderIngeven(QWidget):
                 ].values[0] * int(am)
 
                 s = pd.Series(
-                    [on, date, persid, prodc, prod, am, bedr],
+                    [on, date, cur_barcode, prodc, prod, am, bedr],
                     index=self.orderlines.columns,
                 )
                 self.orderlines = self.orderlines.append(

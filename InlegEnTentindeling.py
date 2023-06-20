@@ -61,12 +61,8 @@ class InlegEnTentindeling(QWidget):
 
         row = self.master.personen[self.master.personen.Naam == naam]
 
-        self.master.personen.at[
-            self.master.personen[self.master.personen.Naam == naam].index, "Tent"
-        ] = self.tent.currentText()
-        self.master.personen.at[
-            self.master.personen[self.master.personen.Naam == naam].index, "Barcode"
-        ] = self.bc.text()
+        self.master.personen.at[row.index, "Tent"] = self.tent.currentText()
+        self.master.personen.at[row.index, "Barcode"] = self.bc.text()
         inleg = self.inleg.text()
         try:
             inleg = float(inleg)
