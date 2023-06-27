@@ -169,11 +169,12 @@ class StafhapEnPB(QWidget):
         print(self.master.master.bonnen)
 
         # check of bon bestaat
-        if int(self.bonnr.text()) in self.master.master.bonnen.index:
+        if int(self.bonnr.text()) in self.master.master.bonnen["Bonnummer"].unique():
             # als bon bestaat, dan kijken of die al verdeeld is
             self.bonomsc = self.master.master.bonnen.loc[
-                float(self.bonnr.text()), "Omschrijving"
-            ]
+                (self.master.master.bonnen["Bonnummer"] == int(self.bonnr.text())),
+                "Omschrijving",
+            ].iloc[0]
             if (
                 self.master.master.stafhapPB.Bonnummer.astype(str)
                 .str.contains(self.bonnr.text())
@@ -213,7 +214,11 @@ class StafhapEnPB(QWidget):
         self.bonomsc_label.setText(self.bonomsc)
 
         self.bondate = datetime.strptime(
-            self.master.master.bonnen.loc[float(self.bonnr.text()), "Datum"], "%d-%m-%Y"
+            self.master.master.bonnen.loc[
+                (self.master.master.bonnen["Bonnummer"] == int(self.bonnr.text())),
+                "Datum",
+            ].iloc[0],
+            "%d-%m-%Y",
         )
         bonday = self.bondate.day
         bonmonth = self.bondate.month
@@ -223,14 +228,16 @@ class StafhapEnPB(QWidget):
         self.date_month.setCurrentIndex(int(bonmonth) - 1)
         self.date_year.setText(str(bonyear))
 
-        self.bedrag = self.master.master.bonnen.loc[float(self.bonnr.text()), "Bedrag"]
+        self.bedrag = self.master.master.bonnen.loc[
+            (self.master.master.bonnen["Bonnummer"] == int(self.bonnr.text())), "Bedrag"
+        ].iloc[0]
         self.bedrag_label.setText("€ " + str(self.bedrag))
 
         self.bedragpp = round(self.bedrag / self.countStaf, 2)
         self.bedragpp_label.setText("€" + str(self.bedragpp))
 
     def bevestig_stafhap_pb(self):
-        # Bonnummer   Datum   PersoonID  Naam    Bedrag
+        # Bonnummer   Datum   Barcode  Naam    Bedrag
         self.cur_bonnr = self.bonnr.text()
         msgOk = QMessageBox()
         msgOk.setIcon(QMessageBox.Warning)
@@ -295,14 +302,16 @@ class StafhapEnPB(QWidget):
         for idx, row in self.stafledenDF.loc[
             self.stafledenDF["Deelname"] == True
         ].iterrows():
-            cur_persoonID = idx
-            cur_naam = self.stafledenDF.loc[idx, "Naam"]
+            cur_persoon_barcode = self.master.master.personen.loc[
+                (self.master.master.personen["Naam"] == row["Naam"]), "Barcode"
+            ].iloc[0]
+            cur_naam = row["Naam"]  # self.stafledenDF.loc[idx, "Naam"]
             serie = pd.Series(
                 [
                     typeBon,
                     self.cur_bonnr,
                     cur_date,
-                    cur_persoonID,
+                    cur_persoon_barcode,
                     cur_naam,
                     self.bedragpp,
                 ],
@@ -312,11 +321,15 @@ class StafhapEnPB(QWidget):
                 serie, ignore_index=True, sort=False
             )
             cur_inleg = self.master.master.inleg.loc[
-                self.master.master.inleg["PersoonID"] == cur_persoonID, "InlegHuidig"
+                self.master.master.inleg["Barcode"] == cur_persoon_barcode,
+                "InlegHuidig",
             ]
             self.master.master.inleg.loc[
-                self.master.master.inleg["PersoonID"] == cur_persoonID, "InlegHuidig"
-            ] = (cur_inleg - self.bedragpp)
+                self.master.master.inleg["Barcode"] == cur_persoon_barcode,
+                "InlegHuidig",
+            ] = (
+                cur_inleg - self.bedragpp
+            )
 
         msgOk = QMessageBox()
         msgOk.setIcon(QMessageBox.Information)
@@ -343,8 +356,12 @@ class StafhapEnPB(QWidget):
         for idx, row in self.stafledenDF.loc[
             self.stafledenDF["Deelname"] == True
         ].iterrows():
+            cur_persoon_barcode = self.master.master.personen.loc[
+                (self.master.master.personen["Naam"] == row["Naam"]), "Barcode"
+            ].iloc[0]
             cur_inleg = self.master.master.inleg.loc[
-                self.master.master.inleg["PersoonID"] == idx, "InlegHuidig"
+                self.master.master.inleg["Barcode"] == cur_persoon_barcode,
+                "InlegHuidig",
             ]
 
             if len(cur_inleg) == 0:

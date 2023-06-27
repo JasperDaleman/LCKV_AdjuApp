@@ -12,7 +12,12 @@ class BonInvoeren(QtWidgets.QWidget):
         self.layout = QtWidgets.QGridLayout()
 
         self.receipt_label = QtWidgets.QLabel(self, text="Bonnummer")
-        self.new_receipt_number = max(self.master.master.bonnen["Bonnummer"], default=1)
+        self.new_receipt_number = (
+            1
+            if len(self.master.master.bonnen["Bonnummer"]) == 0
+            else self.master.master.bonnen["Bonnummer"].max() + 1
+        )
+        print(self.master.master.bonnen["Bonnummer"].max())
         self.receipt_number = QtWidgets.QLabel(self, text=str(self.new_receipt_number))
         self.layout.addWidget(self.receipt_label, 0, 0)
         self.layout.addWidget(self.receipt_number, 0, 1)
@@ -126,6 +131,8 @@ class BonInvoeren(QtWidgets.QWidget):
         self.desc.clear()
         self.amount.clear()
         self.desc.setFocus()
+        self.new_receipt_number += 1
+        self.receipt_number.setText(str(self.new_receipt_number))
 
     def exit(self):
         self.master.change_screens("KampHome")

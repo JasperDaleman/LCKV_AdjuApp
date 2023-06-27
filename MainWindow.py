@@ -14,6 +14,7 @@ from TentWijzigen import TentWijzigen
 from PersonenWijzigen import PersonenWijzigen
 from PersoonToevoegen import PersoonToevoegen
 from StafhapEnPB import StafhapEnPB
+from StafhapEnPBInzien import StafhapEnPBInzien
 from InvullenBegroting import InvullenBegroting
 from Inleggen import Inleggen
 
@@ -41,6 +42,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "PersonenWijzigen": PersonenWijzigen,
             "PersoonToevoegen": PersoonToevoegen,
             "StafhapEnPB": StafhapEnPB,
+            "StafhapEnPBInzien": StafhapEnPBInzien,
             "InvullenBegroting": InvullenBegroting,
             "Inleggen": Inleggen,
         }

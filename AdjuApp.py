@@ -9,7 +9,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 from MainWindow import MainWindow
 
-# TODO: PB niet evenredig verdelen, maar Lars bijv. 10 euro en Tess 5 euro
+# TODO: PB niet evenredig verdelen, maar Lars bijv. 10 euro en Tess 5 euro -> dit kan bij Inzien van PB. Totaal PB bedrag vooraan toevoegen en als je op 'terug' klikt check toevoegen of volledige bedrag precies verdeeld is
 # TODO: streeplijst maken -> bandje scannen, biertje scannen (aantal ergens kunnen wijzigen) -> grote knoppen
 # TODO: dubbele barcodes check maken voor personen
 
@@ -151,10 +151,10 @@ class App(QtWidgets.QApplication):
             )
         except FileNotFoundError:
             self.stafhapPB = pd.DataFrame(
-                columns=["Type", "Bonnummer", "Datum", "PersoonID", "Naam", "Bedrag"]
+                columns=["Type", "Bonnummer", "Datum", "Barcode", "Naam", "Bedrag"]
             )
             self.stafhapPB.Bonnummer = self.stafhapPB.Bonnummer.astype(int)
-            self.stafhapPB.PersoonID = self.stafhapPB.PersoonID.astype(int)
+            self.stafhapPB.Barcode = self.stafhapPB.Barcode.astype(int)
             self.stafhapPB.Bedrag = self.stafhapPB.Bedrag.astype(float)
 
         try:
